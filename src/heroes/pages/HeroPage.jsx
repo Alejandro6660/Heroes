@@ -1,12 +1,19 @@
-import { Navigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { getHeroesById } from "../helpers";
+import { useMemo } from "react";
 
 export const HeroPage = () => {
   const { id } = useParams();
-  const hero = getHeroesById(id);
+  const hero = useMemo(() => getHeroesById(id), [id]);
+
+  const navigate = useNavigate();
   if (!hero) {
     return <Navigate to={"/"} />;
   }
+  const onReturn = () => {
+    navigate(-1);
+  };
+
   return (
     <div className="row mt-5 mx-2">
       <div className="col-4">
@@ -32,6 +39,11 @@ export const HeroPage = () => {
             {hero.first_appearance}
           </li>
         </ul>
+        <h5 className="mt-3">Characters</h5>
+        <p className="text-muted">{hero.characters}</p>
+        <button className="btn btn-outline-danger mt-3 mx-3" onClick={onReturn}>
+          Return
+        </button>
       </div>
     </div>
   );
